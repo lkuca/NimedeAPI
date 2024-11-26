@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NimedeAPI.Modules; // Update with your namespace
-using System.Linq;
 using NimedeAPI.Modules;
+
 
 namespace YourNamespace.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
+        // Näide lihtsa in-memory autentimise kohta
         private static List<User> users = new List<User>();
 
-        // POST: /auth/register
+        // Kasutaja registreerimine
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
@@ -25,15 +25,14 @@ namespace YourNamespace.Controllers
                 Id = Guid.NewGuid(),
                 Username = request.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                FirstName = request.FirstName,
-                LastName = request.LastName
+                Role = "Registered"
             };
 
             users.Add(newUser);
             return Ok("Registration successful!");
         }
 
-        // POST: /auth/login
+        // Kasutaja sisselogimine
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
@@ -46,11 +45,11 @@ namespace YourNamespace.Controllers
             return Ok("Login successful!");
         }
 
-        // POST: /auth/logout
+        // Kasutaja väljalogimine
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            // Add token invalidation logic if using tokens
+            // Tühjendage kasutaja sessioon või token (kui kasutasite tokenite süsteemi)
             return Ok("Logout successful!");
         }
     }
